@@ -1,0 +1,46 @@
+# MangaTranslator Extension Backend
+
+[project]
+name = "manga-translator-backend"
+version = "1.0.0"
+description = "FastAPI backend for MangaTranslator browser extension"
+requires-python = ">=3.10"
+dependencies = [
+    "diffusers>=0.37.0",
+    "fastapi>=0.115.0",
+    "fonttools>=4.56.0",
+    "huggingface-hub>=0.24.0",
+    "manga-ocr>=0.1.14",
+    "numpy>=1.24.0",
+    "opencv-contrib-python>=4.8.0",
+    "packaging>=24.0",
+    "pillow>=11.1.0",
+    "pyoxipng>=9.1.1",
+    "uvicorn[standard]>=0.30.0",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "python-multipart>=0.0.9",
+    "httpx>=0.27.0",
+    "requests>=2.32.3",
+    "safetensors>=0.4.0",
+    "scikit-learn>=1.3.0",
+    "scipy>=1.10.0",
+    "sdnq>=0.1.3",
+    "skia-python>=87.7",
+    "spandrel>=0.3.0",
+    "torch",
+    "torchvision",
+    "transformers>=5.0.0",
+    "uharfbuzz>=0.48.0",
+    "ultralytics>=8.3.94",
+]
+
+# Discover only the 'backend' package directory (src-layout)
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["config", "endpoints*", "models*", "pipeline*", "core*", "utils*", "main"]
+
+[tool.uvicorn]
+host = "0.0.0.0"
+port = 7677
+reload = false

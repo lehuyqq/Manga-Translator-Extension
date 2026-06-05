@@ -1,0 +1,8 @@
+{
+  "extensionName": {
+    "message": "MangaTranslator Browser Overlay"
+  },
+  "extensionDescription": {
+    "message": "만화 페이지를 스캔하고 이미지를 선택한 뒤 로컬 MangaTranslator 백엔드로 번역 결과를 표시합니다."
+  }
+}

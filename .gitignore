@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Browser extension build output
+extension/dist/
+extension/node_modules/
+extension/.vite/
+
+# Portable runtime and generated assets
+backend/runtime/
+backend/models/
+backend/.venv/
+backend/*.egg-info/
+backend/__pycache__/
+backend/core/__pycache__/
+backend/pipeline/__pycache__/
+runtime/
+
+# Secrets and local machine settings
+.env
+.env.*
+*.key
+*.pem
+
+# Logs and caches
+*.log
+logs/
+cache/
+*.tmp
+*.bak
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

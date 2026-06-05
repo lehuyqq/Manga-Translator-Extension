@@ -1,0 +1,8 @@
+{
+  "extensionName": {
+    "message": "MangaTranslator Browser Overlay"
+  },
+  "extensionDescription": {
+    "message": "Quét trang manga, chọn ảnh và phủ kết quả dịch bằng backend MangaTranslator cục bộ."
+  }
+}

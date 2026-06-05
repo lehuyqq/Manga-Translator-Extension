@@ -1,0 +1,8 @@
+{
+  "extensionName": {
+    "message": "MangaTranslator Browser Overlay"
+  },
+  "extensionDescription": {
+    "message": "Scan manga pages, choose images, and overlay translated results with a local MangaTranslator backend."
+  }
+}

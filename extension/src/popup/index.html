@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MangaTranslator</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 390px;
+      min-height: 460px;
+      font-family: Inter, system-ui, sans-serif;
+      background: #080c18;
+      color: #dde6f5;
+    }
+    .popup { padding: 16px 16px 14px; display: flex; flex-direction: column; gap: 12px; }
+    .popup-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .popup-title-block { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+    .popup-title {
+      font-size: 20px; font-weight: 800;
+      background: linear-gradient(135deg, #60a5fa, #a78bfa);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .popup-subtitle { font-size: 11px; color: #6b7fa8; }
+    .health-badge {
+      font-size: 10px; font-weight: 700; padding: 5px 9px;
+      border-radius: 99px; white-space: nowrap; background: #1a2a3a; color: #6b7fa8;
+    }
+    .health-badge.ok { background: #0d3320; color: #4ade80; }
+    .health-badge.err { background: #2d0d0d; color: #f87171; }
+    .tabs {
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px;
+      background: rgba(8,14,28,0.9);
+      border: 1px solid rgba(59,130,246,0.1);
+      border-radius: 10px; padding: 3px;
+    }
+    .tab-btn {
+      border: none; background: none; color: #4a5e80;
+      font-size: 10.5px; font-weight: 700; padding: 7px 4px;
+      border-radius: 7px; cursor: pointer; transition: all 0.15s;
+      letter-spacing: 0;
+      overflow-wrap: anywhere;
+    }
+    .tab-btn:hover { color: #7a90b8; }
+    .tab-btn.active { background: rgba(59,130,246,0.18); color: #60a5fa; }
+    .config-section {
+      background: rgba(15,25,48,0.8);
+      border: 1px solid rgba(59,130,246,0.12);
+      border-radius: 8px; padding: 14px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: flex; flex-direction: column; gap: 12px; }
+    .config-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+    .label {
+      font-size: 11px; font-weight: 700; color: #7a90b8;
+      letter-spacing: 0; text-transform: uppercase;
+    }
+    .input, .select, .textarea {
+      width: 100%; border: 1px solid rgba(59,130,246,0.15);
+      background: rgba(8,14,28,0.9); color: #dde6f5;
+      border-radius: 8px; padding: 8px 10px;
+      font-size: 12px; outline: none; transition: border-color 0.15s;
+    }
+    .input:focus, .select:focus, .textarea:focus { border-color: rgba(59,130,246,0.5); }
+    .select { cursor: pointer; }
+    .textarea { resize: none; min-height: 54px; font-family: inherit; line-height: 1.4; }
+    .llm-fields { display: flex; flex-direction: column; gap: 10px; }
+    .llm-fields-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .model-picker { display: flex; flex-direction: column; gap: 5px; }
+    .model-picker-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .btn-fetch-models {
+      font-size: 10px; font-weight: 700; padding: 4px 10px;
+      background: rgba(59,130,246,0.15); color: #60a5fa;
+      border: 1px solid rgba(59,130,246,0.25); border-radius: 6px;
+      cursor: pointer; transition: all 0.15s;
+      overflow-wrap: anywhere;
+    }
+    .btn-fetch-models:hover { background: rgba(59,130,246,0.25); }
+    .btn-fetch-models:disabled { opacity: 0.4; cursor: not-allowed; }
+    .model-select-wrap { position: relative; }
+    .model-select {
+      width: 100%; border: 1px solid rgba(59,130,246,0.15);
+      background: rgba(8,14,28,0.9); color: #dde6f5;
+      border-radius: 8px; padding: 8px 10px;
+      font-size: 12px; outline: none; cursor: pointer;
+      appearance: none; -webkit-appearance: none;
+      transition: border-color 0.15s;
+    }
+    .model-select:focus { border-color: rgba(59,130,246,0.5); }
+    .model-select:disabled { opacity: 0.5; cursor: not-allowed; }
+    .model-select-wrap::after {
+      content: 'v'; position: absolute; right: 10px; top: 50%;
+      transform: translateY(-50%); font-size: 8px; color: #4a5e80;
+      pointer-events: none;
+    }
+    .model-hint, .toggle-hint { font-size: 10px; color: #4a5e80; line-height: 1.35; }
+    .model-loading { font-size: 11px; color: #60a5fa; display: flex; align-items: center; gap: 6px; }
+    .spinner {
+      width: 12px; height: 12px; border: 2px solid rgba(59,130,246,0.2);
+      border-top-color: #60a5fa; border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .model-error { font-size: 10px; color: #f87171; }
+    .slider-row { display: flex; flex-direction: column; gap: 5px; }
+    .slider-label-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .slider-value { font-size: 11px; font-weight: 700; color: #60a5fa; min-width: 28px; text-align: right; }
+    .slider { width: 100%; accent-color: #3b82f6; cursor: pointer; height: 4px; }
+    .toggle-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .toggle-copy { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+    .toggle-title {
+      font-size: 11px; font-weight: 700; color: #7a90b8;
+      letter-spacing: 0; text-transform: uppercase;
+    }
+    .toggle { position: relative; width: 36px; height: 20px; flex: 0 0 auto; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute; inset: 0; background: rgba(59,130,246,0.15);
+      border-radius: 20px; cursor: pointer; transition: 0.2s;
+    }
+    .toggle-slider::before {
+      content: ''; position: absolute;
+      width: 14px; height: 14px; left: 3px; bottom: 3px;
+      background: #4a5e80; border-radius: 50%; transition: 0.2s;
+    }
+    .toggle input:checked + .toggle-slider { background: rgba(59,130,246,0.35); }
+    .toggle input:checked + .toggle-slider::before { background: #60a5fa; transform: translateX(16px); }
+    .actions { display: flex; flex-direction: column; gap: 8px; }
+    .actions-row { display: flex; gap: 8px; }
+    .btn {
+      width: 100%; border: none; border-radius: 8px;
+      padding: 12px; font-size: 13px; font-weight: 700;
+      cursor: pointer; letter-spacing: 0; overflow-wrap: anywhere;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #3b82f6, #7c3aed);
+      color: white; box-shadow: 0 4px 16px rgba(59,130,246,0.25);
+    }
+    .btn-primary:hover:not(:disabled) { opacity: 0.92; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-secondary {
+      background: rgba(15,25,48,0.9); color: #7a90b8;
+      border: 1px solid rgba(59,130,246,0.12); flex: 1;
+    }
+    .btn-secondary:hover { border-color: rgba(59,130,246,0.3); color: #a0b8d8; }
+    .btn-auto {
+      background: linear-gradient(135deg, #16a34a, #15803d); color: white; flex: 1;
+      border: none; box-shadow: 0 2px 10px rgba(22,163,74,0.2);
+    }
+    .btn-auto:hover:not(:disabled) { opacity: 0.9; }
+    .btn-auto:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-auto.active { background: linear-gradient(135deg, #b91c1c, #991b1b); }
+    .btn-clear-cache {
+      background: rgba(15,25,48,0.6); color: #4a5e80;
+      border: 1px solid rgba(59,130,246,0.06); font-size: 11px; padding: 8px;
+    }
+    .btn-clear-cache:hover { color: #7a90b8; border-color: rgba(59,130,246,0.15); }
+    #popup-status { font-size: 11px; color: #6b7fa8; text-align: center; min-height: 16px; }
+    #popup-status.err { color: #f87171; }
+    #popup-status.ok { color: #4ade80; }
+    .popup-footer { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 10px; color: #3a4f6a; }
+  </style>
+</head>
+<body>
+  <div class="popup">
+    <div class="popup-header">
+      <div class="popup-title-block">
+        <div class="popup-title">MangaTranslator</div>
+        <div class="popup-subtitle" data-i18n="popupSubtitle">Scan page · Select · Translate</div>
+      </div>
+      <span id="health-badge" class="health-badge" data-i18n="healthChecking">Checking</span>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="translate" data-i18n="tabTranslate">Translate</button>
+      <button class="tab-btn" data-tab="llm" data-i18n="tabLlm">LLM Config</button>
+      <button class="tab-btn" data-tab="config" data-i18n="tabConfig">Config</button>
+    </div>
+
+    <div id="tab-translate" class="tab-pane active">
+      <div class="config-section">
+        <div class="config-row">
+          <div class="field">
+            <label class="label" data-i18n="labelSource">Source</label>
+            <select id="f-source" class="select"></select>
+          </div>
+          <div class="field">
+            <label class="label" data-i18n="labelTarget">Target</label>
+            <select id="f-target" class="select"></select>
+          </div>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-copy">
+            <div class="toggle-title" data-i18n="labelOutsideText">Outside text</div>
+            <div class="toggle-hint" data-i18n="hintOutsideText">Detect and translate SFX/narration outside bubbles</div>
+          </div>
+          <label class="toggle">
+            <input id="f-outside-text" type="checkbox" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="actions">
+        <button id="btn-scan" class="btn btn-primary" data-i18n="btnScan">Scan &amp; Translate Page</button>
+        <div class="actions-row">
+          <button id="btn-auto" class="btn btn-auto" data-i18n="btnAuto">Auto-translate</button>
+          <button id="btn-save" class="btn btn-secondary" data-i18n="btnSave">Save</button>
+        </div>
+        <button id="btn-clear-cache" class="btn btn-clear-cache" data-i18n="btnClearCache">Clear translated cache</button>
+      </div>
+    </div>
+
+    <div id="tab-llm" class="tab-pane">
+      <div class="config-section">
+        <div class="field">
+          <label class="label" data-i18n="labelProvider">Provider</label>
+          <select id="f-llm-provider" class="select">
+            <option value="Google">Google</option>
+            <option value="OpenAI">OpenAI</option>
+            <option value="Anthropic">Anthropic</option>
+            <option value="xAI">xAI</option>
+            <option value="DeepSeek">DeepSeek</option>
+            <option value="Z.ai">Z.ai</option>
+            <option value="Moonshot AI">Moonshot AI</option>
+            <option value="OpenRouter">OpenRouter</option>
+            <option value="OpenAI-Compatible">OpenAI-Compatible</option>
+          </select>
+        </div>
+
+        <div class="llm-fields">
+          <div class="field">
+            <label class="label" data-i18n="labelBaseUrl">Base URL</label>
+            <input id="f-base-url" class="input" type="url" placeholder="https://api.openai.com/v1" />
+          </div>
+
+          <div class="model-picker">
+            <div class="model-picker-header">
+              <label class="label" data-i18n="labelModel">Model</label>
+              <button id="btn-fetch-models" class="btn-fetch-models" data-i18n="btnFetchModels">Fetch Models</button>
+            </div>
+            <div id="model-picker-wrap">
+              <input id="f-model" class="input" type="text" placeholder="model id, e.g. gpt-4o-mini" data-i18n-placeholder="placeholderModel" />
+            </div>
+            <div id="model-loading" class="model-loading" style="display:none">
+              <div class="spinner"></div><span data-i18n="modelLoading">Fetching models...</span>
+            </div>
+            <div id="model-error" class="model-error" style="display:none"></div>
+            <div class="model-hint" id="model-hint" data-i18n="modelHint">Enter Base URL then click "Fetch Models" to list available models.</div>
+          </div>
+
+          <div class="field">
+            <label class="label" data-i18n="labelApiKey">API Key</label>
+            <input id="f-llm-apikey" class="input" type="password" placeholder="sk-..." data-i18n-placeholder="placeholderApiKey" />
+          </div>
+        </div>
+
+        <div class="llm-fields-row">
+          <div class="field slider-row">
+            <div class="slider-label-row">
+              <label class="label" data-i18n="labelTemperature">Temperature</label>
+              <span class="slider-value" id="val-temp">0.1</span>
+            </div>
+            <input id="f-temp" class="slider" type="range" min="0" max="2" step="0.05" value="0.1" />
+          </div>
+          <div class="field slider-row">
+            <div class="slider-label-row">
+              <label class="label" data-i18n="labelTopP">Top P</label>
+              <span class="slider-value" id="val-topp">0.95</span>
+            </div>
+            <input id="f-topp" class="slider" type="range" min="0" max="1" step="0.05" value="0.95" />
+          </div>
+        </div>
+
+        <div class="field slider-row">
+          <div class="slider-label-row">
+            <label class="label" data-i18n="labelTopK">Top K</label>
+            <span class="slider-value" id="val-topk">1</span>
+          </div>
+          <input id="f-topk" class="slider" type="range" min="1" max="20" step="1" value="1" />
+        </div>
+
+        <div class="toggle-row">
+          <label class="label" data-i18n="labelFullPageContext">Full Page Context</label>
+          <label class="toggle">
+            <input id="f-context" type="checkbox" checked />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="field">
+          <label class="label"><span data-i18n="labelSpecialInstructions">Special Instructions</span> <span style="font-weight:400;text-transform:none;color:#4a5e80" data-i18n="labelOptional">(optional)</span></label>
+          <textarea id="f-instructions" class="textarea" placeholder="e.g. Keep honorifics, use casual tone..." data-i18n-placeholder="placeholderInstructions"></textarea>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="btn-save-llm" class="btn btn-primary" data-i18n="btnSaveLlm">Save LLM Settings</button>
+      </div>
+    </div>
+
+    <div id="tab-config" class="tab-pane">
+      <div class="config-section">
+        <div class="field">
+          <label class="label" data-i18n="labelUiLanguage">Extension language</label>
+          <select id="f-ui-language" class="select"></select>
+          <div class="toggle-hint" data-i18n="hintUiLanguage">Changes popup, scanner, and auto-translate overlay text.</div>
+        </div>
+        <div class="field">
+          <label class="label" data-i18n="labelBackendUrl">Backend URL</label>
+          <input id="f-backend" class="input" type="url" />
+        </div>
+      </div>
+      <div class="actions">
+        <button id="btn-save-config" class="btn btn-primary" data-i18n="btnSave">Save</button>
+      </div>
+    </div>
+
+    <div id="popup-status"></div>
+
+    <div class="popup-footer">
+      <span>Backend v2.0</span>
+      <span>·</span>
+      <span id="backend-url-display">-</span>
+    </div>
+  </div>
+
+  <script type="module" src="./index.ts"></script>
+</body>
+</html>

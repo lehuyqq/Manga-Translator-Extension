@@ -1,0 +1,51 @@
+/* Content script CSS (injected via manifest) */
+
+.manga-translator-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 2147483646;
+}
+
+.manga-translator-selection-box {
+  position: absolute;
+  border: 2px solid #3b82f6;
+  background: rgba(59, 130, 246, 0.12);
+  cursor: move;
+  z-index: 2147483647;
+  transition: border-color 0.1s;
+}
+
+.manga-translator-selection-box:hover {
+  border-color: #60a5fa;
+  background: rgba(59, 130, 246, 0.2);
+}
+
+.manga-translator-status-bar {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 16px;
+  background: rgba(15, 17, 23, 0.88);
+  color: #e2e8f0;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  border-radius: 10px;
+  z-index: 2147483647;
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s;
+  max-width: 340px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+.manga-translator-status-bar.error {
+  background: rgba(127, 29, 29, 0.88);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.manga-translator-status-bar.success {
+  background: rgba(20, 83, 45, 0.88);
+  border-color: rgba(34, 197, 94, 0.3);
+}

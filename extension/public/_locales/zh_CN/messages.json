@@ -1,0 +1,8 @@
+{
+  "extensionName": {
+    "message": "MangaTranslator Browser Overlay"
+  },
+  "extensionDescription": {
+    "message": "扫描漫画页面、选择图片，并通过本地 MangaTranslator 后端叠加翻译结果。"
+  }
+}
