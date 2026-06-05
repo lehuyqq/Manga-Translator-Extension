@@ -32,6 +32,7 @@ runtime/
 *.log
 logs/
 cache/
+release-assets/
 *.tmp
 *.bak
 
