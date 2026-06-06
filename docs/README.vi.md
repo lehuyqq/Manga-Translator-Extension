@@ -14,6 +14,7 @@ Dịch trang manga cục bộ cho các trình duyệt dựa trên Chromium, dùn
 - Trình quét ảnh manga/comic trên trang với lựa chọn dịch theo lô.
 - Chế độ tự động dịch, thay ảnh bằng bản đã dịch khi bạn đọc.
 - Hỗ trợ chữ trong bubble và chữ ngoài bubble, mặc định dùng cleanup nhẹ.
+- Có thể tải tùy chọn Flux Klein 4B inpainting sau bằng `setup.bat`.
 - Tùy chọn ngôn ngữ nguồn/đích: Nhật, Hàn, Anh và Việt.
 - Ngôn ngữ giao diện extension: tiếng Anh mặc định, kèm tiếng Việt, tiếng Trung, tiếng Nhật và tiếng Hàn.
 - Bộ chọn model OpenAI-compatible cùng các provider Google, OpenAI, Anthropic, xAI, DeepSeek, Z.ai, Moonshot AI và OpenRouter.
@@ -64,6 +65,15 @@ npm run build
 
 Load `extension/dist/` dưới dạng unpacked extension trong Chrome hoặc Edge.
 
+Thiết lập Flux tùy chọn:
+
+```powershell
+cd manga-translator-extension
+.\setup.bat
+```
+
+Chỉ chọn Flux nếu bạn muốn dùng inpainting nặng hơn. Gói portable mặc định được giữ nhẹ và không bao gồm model Flux.
+
 ## Cấu Hình
 
 Mở popup extension:
@@ -82,7 +92,7 @@ Dự án có thể chạy như một thư mục portable khi Python runtime nằ
 manga-translator-extension/backend/runtime/
 ```
 
-Runtime có dung lượng lớn và nên được phân phối dưới dạng release asset hoặc archive portable cục bộ, không commit vào GitHub repository thông thường. GitHub chặn file trên 100 MB trong lịch sử Git thường, còn runtime này có dung lượng vài GB.
+Runtime có dung lượng lớn và nên được phân phối dưới dạng release asset hoặc archive portable cục bộ, không commit vào GitHub repository thông thường. GitHub chặn file trên 100 MB trong lịch sử Git thường, còn runtime này có dung lượng vài GB. Model Flux không đi kèm mặc định; dùng `setup.bat` để tải khi cần.
 
 ## Phát Triển
 

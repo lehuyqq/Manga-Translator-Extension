@@ -14,6 +14,7 @@ Local manga page translation for Chromium-based browsers, powered by a FastAPI b
 - Page scanner for manga/comic images with selectable batch translation.
 - Auto-translate mode that replaces images as you read.
 - Bubble text and outside-bubble text support, with lightweight cleanup by default.
+- Optional Flux Klein 4B inpainting can be downloaded later with `setup.bat`.
 - Source/target options for Japanese, Korean, English, and Vietnamese.
 - Extension UI languages: English by default, plus Vietnamese, Chinese, Japanese, and Korean.
 - OpenAI-compatible model picker plus Google, OpenAI, Anthropic, xAI, DeepSeek, Z.ai, Moonshot AI, and OpenRouter provider options.
@@ -64,6 +65,15 @@ npm run build
 
 Load `extension/dist/` as an unpacked extension in Chrome or Edge.
 
+Optional Flux setup:
+
+```powershell
+cd manga-translator-extension
+.\setup.bat
+```
+
+Choose the Flux option only if you want heavier Flux inpainting. The default portable package is intentionally lightweight and does not include Flux models.
+
 ## Configuration
 
 Open the extension popup:
@@ -82,7 +92,7 @@ This project can run as a portable folder when the Python runtime is present at:
 manga-translator-extension/backend/runtime/
 ```
 
-The runtime is large and should be distributed as a release asset or local portable archive, not committed into a normal GitHub repository. GitHub blocks files over 100 MB in regular Git history, and this runtime is several GB.
+The runtime is large and should be distributed as a release asset or local portable archive, not committed into a normal GitHub repository. GitHub blocks files over 100 MB in regular Git history, and this runtime is several GB. Flux models are not included by default; use `setup.bat` to download them on demand.
 
 ## Development
 

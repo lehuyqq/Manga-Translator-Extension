@@ -14,6 +14,7 @@
 - 页面漫画/Comic 图片扫描器，支持选择图片并批量翻译。
 - 自动翻译模式，可在阅读时替换为已翻译图片。
 - 支持气泡内文字和气泡外文字，默认使用轻量清理方式。
+- 可通过 `setup.bat` 后续按需下载可选的 Flux Klein 4B inpainting。
 - 源语言/目标语言选项：日语、韩语、英语和越南语。
 - 扩展界面语言：默认英语，另有越南语、中文、日语和韩语。
 - OpenAI-compatible 模型选择器，以及 Google、OpenAI、Anthropic、xAI、DeepSeek、Z.ai、Moonshot AI 和 OpenRouter 等 provider。
@@ -64,6 +65,15 @@ npm run build
 
 在 Chrome 或 Edge 中以 unpacked extension 加载 `extension/dist/`。
 
+可选 Flux 设置：
+
+```powershell
+cd manga-translator-extension
+.\setup.bat
+```
+
+只有在需要更重的 Flux inpainting 时才选择 Flux。默认 portable 包会保持轻量，不包含 Flux 模型。
+
 ## 配置
 
 打开扩展弹窗：
@@ -82,7 +92,7 @@ npm run build
 manga-translator-extension/backend/runtime/
 ```
 
-Runtime 体积很大，应作为 release asset 或本地 portable archive 分发，不应提交到普通 GitHub repository。GitHub 会阻止普通 Git 历史中超过 100 MB 的文件，而此 runtime 有数 GB。
+Runtime 体积很大，应作为 release asset 或本地 portable archive 分发，不应提交到普通 GitHub repository。GitHub 会阻止普通 Git 历史中超过 100 MB 的文件，而此 runtime 有数 GB。Flux 模型默认不包含在包内；需要时可通过 `setup.bat` 下载。
 
 ## 开发
 
