@@ -1,120 +1,255 @@
-# MangaTranslator Extension
+<h1 align="center">MangaTranslator Extension</h1>
 
-![Manifest V3](https://img.shields.io/badge/Manifest-V3-4285F4)
-![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6)
-![FastAPI](https://img.shields.io/badge/FastAPI-backend-009688)
-![Portable](https://img.shields.io/badge/Windows-portable-0078D4)
+<p align="center">
+  Translate manga pages directly in your browser with a local FastAPI backend, batch page scanner, auto-translate mode, multilingual UI, and optional Flux inpainting.
+</p>
 
-Local manga page translation for Chromium-based browsers, powered by a FastAPI backend and a bundled MangaTranslator pipeline.
+<p align="center">
+  <a href="docs/README.vi.md">Tiếng Việt</a>
+  ·
+  <a href="docs/README.zh.md">中文</a>
+</p>
 
-[Tiếng Việt](docs/README.vi.md) · [中文](docs/README.zh.md)
+<p align="center">
+  <img alt="Manifest V3" src="https://img.shields.io/badge/Manifest-V3-4285F4">
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-strict-3178C6">
+  <img alt="FastAPI" src="https://img.shields.io/badge/FastAPI-backend-009688">
+  <img alt="Windows portable" src="https://img.shields.io/badge/Windows-portable-0078D4">
+  <img alt="Release" src="https://img.shields.io/github/v/release/lehuyqq/Manga-Translator-Extension?label=release">
+</p>
 
-## Highlights
+<p align="center">
+  <a href="#features">Features</a>
+  ·
+  <a href="#download">Download</a>
+  ·
+  <a href="#quick-start">Quick Start</a>
+  ·
+  <a href="#configuration">Configuration</a>
+  ·
+  <a href="#optional-flux">Optional Flux</a>
+  ·
+  <a href="#development">Development</a>
+</p>
 
-- Page scanner for manga/comic images with selectable batch translation.
-- Auto-translate mode that replaces images as you read.
-- Bubble text and outside-bubble text support, with lightweight cleanup by default.
-- Optional Flux Klein 4B inpainting can be downloaded later with `setup.bat`.
-- Source/target options for Japanese, Korean, English, and Vietnamese.
-- Extension UI languages: English by default, plus Vietnamese, Chinese, Japanese, and Korean.
-- OpenAI-compatible model picker plus Google, OpenAI, Anthropic, xAI, DeepSeek, Z.ai, Moonshot AI, and OpenRouter provider options.
-- Portable backend startup through `start-backend.bat` or `backend/main.py`.
+## Overview
+
+MangaTranslator Extension is a portable browser-extension stack for translating manga and comic pages. The browser extension scans images on the current page, sends them to a local backend, and replaces or previews the translated result. The backend runs locally, so the browser does not need to send manga images through a third-party extension server.
+
+The default package is intentionally lighter: it includes the normal backend runtime and non-Flux models, while Flux Klein 4B is optional and can be installed later with `setup.bat`.
+
+## Features
+
+| Area | What it does |
+| --- | --- |
+| Page scanner | Finds manga/comic images on the active page and lets you choose which pages to translate. |
+| Auto-translate | Watches the current reading page and translates images as you scroll. |
+| Bubble translation | Detects speech bubbles, removes original text, translates, and renders text back into the image. |
+| Outside-bubble text | Handles SFX/narration outside speech bubbles with lightweight cleanup by default. |
+| Optional Flux | Lets advanced users download Flux Klein 4B for heavier inpainting without shipping it in the default release. |
+| Provider support | Google, OpenAI, Anthropic, xAI, DeepSeek, Z.ai, Moonshot AI, OpenRouter, and OpenAI-compatible endpoints. |
+| Model picker | Fetches available OpenAI-compatible models from your configured Base URL. |
+| UI languages | English by default, plus Vietnamese, Chinese, Japanese, and Korean. |
+| Translation languages | Main source/target options include Japanese, Korean, English, and Vietnamese. |
+| Portable backend | Uses `start-backend.bat`, `backend/main.py`, and optional bundled `backend/runtime/python.exe`. |
+
+## Download
+
+Latest release:
+
+```text
+https://github.com/lehuyqq/Manga-Translator-Extension/releases/latest
+```
+
+Recommended release assets:
+
+| Asset | Purpose |
+| --- | --- |
+| `manga-translator-extension-dist-*.zip` | Built browser extension. Load the extracted `dist/` folder in Chrome/Edge. |
+| `manga-translator-models-no-flux-*.zip` | Backend model files without Flux. Extract into the project root so it restores `backend/models/`. |
+| `manga-translator-runtime-*.tar.gz.part01`, `part02`, ... | Split backend Python runtime. Recombine before extracting. |
+
+Recombine split runtime parts on Windows PowerShell:
+
+```powershell
+Get-Content .\manga-translator-runtime-v1.0.1.tar.gz.part* -Encoding Byte -ReadCount 0 |
+  Set-Content .\manga-translator-runtime-v1.0.1.tar.gz -Encoding Byte
+
+tar -xzf .\manga-translator-runtime-v1.0.1.tar.gz
+```
+
+Extract models:
+
+```powershell
+Expand-Archive .\manga-translator-models-no-flux-v1.0.1.zip -DestinationPath .
+```
+
+## Quick Start
+
+1. Download the source or clone the repository.
+
+```powershell
+git clone https://github.com/lehuyqq/Manga-Translator-Extension.git
+cd Manga-Translator-Extension
+```
+
+1. Download release assets and restore `backend/runtime/` and `backend/models/`.
+
+1. Start the backend.
+
+```powershell
+.\start-backend.bat
+```
+
+The backend should listen on:
+
+```text
+http://localhost:7677
+```
+
+1. Load the browser extension.
+
+```powershell
+cd extension
+npm install
+npm run build
+```
+
+Then open Chrome or Edge:
+
+```text
+chrome://extensions/
+```
+
+Enable Developer mode, choose Load unpacked, and select `extension/dist/`.
+
+## Configuration
+
+Open the extension popup and use the three tabs:
+
+| Tab | Options |
+| --- | --- |
+| `Translate` | Source language, target language, outside-bubble text toggle. |
+| `LLM Config` | Provider, Base URL, model, API key, temperature, Top P, Top K, full-page context, special instructions. |
+| `Config` | Extension UI language and backend URL. |
+
+Default backend URL:
+
+```text
+http://localhost:7677
+```
+
+Provider keys can be entered in the popup or exposed through environment variables:
+
+```text
+GOOGLE_API_KEY
+OPENAI_API_KEY
+ANTHROPIC_API_KEY
+```
+
+## Optional Flux
+
+Flux is not bundled in the normal release because it adds several GB. The default outside-bubble mode uses lightweight cleanup and does not require Flux.
+
+To install Flux Klein 4B on demand:
+
+```powershell
+.\setup.bat
+```
+
+Choose:
+
+```text
+2. Download optional Flux Klein 4B model
+```
+
+The script downloads to:
+
+```text
+backend/models/flux/
+```
+
+Use Flux only when you explicitly configure outside-text inpainting to a Flux mode such as `flux_klein_4b`. For most users, the default `auto` behavior is lighter and faster.
+
+## Usage Workflow
+
+1. Start the backend with `start-backend.bat`.
+1. Open a manga/comic chapter in Chrome or Edge.
+1. Click the MangaTranslator extension icon.
+1. Choose source and target language.
+1. Click Scan & Translate Page to choose images manually, or Auto-translate to translate as you scroll.
+1. Review translated images on the page.
 
 ## Project Layout
 
 ```text
 manga-translator-extension/
-  backend/                 FastAPI backend and MangaTranslator integration
-  backend/main.py          Backend entry point
-  backend/core/            Detection, cleanup, translation, and rendering code
-  backend/models/          Pydantic API schemas
-  backend/pipeline/        Wrapper around the core pipeline
-  extension/               Manifest V3 browser extension
-  extension/src/popup/     Popup UI
-  extension/src/shared/    Shared types, constants, and i18n
-  extension/src/background Background service worker
-  extension/src/content-script Page scanner and auto-translate overlay
-  docs/                    API and localized documentation
+  backend/                         FastAPI backend and MangaTranslator integration
+  backend/main.py                  Backend entry point
+  backend/core/                    Detection, cleanup, translation, rendering
+  backend/models/                  Model files restored from release assets
+  backend/pipeline/                Wrapper around the core pipeline
+  extension/                       Manifest V3 browser extension
+  extension/src/background/        Service worker and backend requests
+  extension/src/content-script/    Page scanner and auto-translate overlay
+  extension/src/popup/             Popup UI
+  extension/src/shared/            Types, constants, i18n
+  docs/                            API docs and localized READMEs
+  setup.bat                        Optional setup helper, including Flux download
+  start-backend.bat                Backend launcher
 ```
 
-## Quick Start
-
-Start the backend:
-
-```powershell
-cd manga-translator-extension
-.\start-backend.bat
-```
-
-Or run it directly:
-
-```powershell
-cd manga-translator-extension\backend
-python main.py
-```
-
-For this portable build, prefer `backend\runtime\python.exe` or the bundled `MangaTranslator\runtime\python.exe` when CUDA/GPU packages are required.
+## Development
 
 Build the extension:
 
 ```powershell
-cd manga-translator-extension\extension
+cd extension
 npm install
 npm run build
 ```
 
-Load `extension/dist/` as an unpacked extension in Chrome or Edge.
-
-Optional Flux setup:
+Compile-check backend files:
 
 ```powershell
-cd manga-translator-extension
-.\setup.bat
-```
-
-Choose the Flux option only if you want heavier Flux inpainting. The default portable package is intentionally lightweight and does not include Flux models.
-
-## Configuration
-
-Open the extension popup:
-
-- `Translate`: choose source/target language and outside-bubble text translation.
-- `LLM Config`: configure provider, model, API key, sampling values, and special instructions.
-- `Config`: switch extension language and set the backend URL.
-
-The backend URL defaults to `http://localhost:7677`.
-
-## Runtime Packaging
-
-This project can run as a portable folder when the Python runtime is present at:
-
-```text
-manga-translator-extension/backend/runtime/
-```
-
-The runtime is large and should be distributed as a release asset or local portable archive, not committed into a normal GitHub repository. GitHub blocks files over 100 MB in regular Git history, and this runtime is several GB. Flux models are not included by default; use `setup.bat` to download them on demand.
-
-## Development
-
-Minimum checks:
-
-```powershell
-cd manga-translator-extension\extension
-npm run build
-
 cd ..\backend
 python -m py_compile pipeline\wrapper.py
 ```
 
-Backend health check:
+Check backend health:
 
 ```powershell
 Invoke-RestMethod http://localhost:7677/health
 ```
 
+## Release Packaging
+
+Do not commit generated runtime, models, caches, or extension build output. They are intentionally ignored:
+
+```text
+backend/runtime/
+backend/models/
+extension/dist/
+extension/node_modules/
+release-assets/
+```
+
+Use GitHub Releases for runtime/model archives. GitHub blocks files over 100 MB in normal Git history, and large runtime archives should be split so each release asset stays below GitHub's release asset limit.
+
+## Troubleshooting
+
+| Problem | Fix |
+| --- | --- |
+| Backend offline in popup | Start `.\start-backend.bat` and confirm `http://localhost:7677/health`. |
+| Extension cannot connect | Check the backend URL in the `Config` tab. |
+| No images found | Let the manga page finish loading, then run Scan & Translate Page again. |
+| Model/provider error | Check API key, Base URL, model name, and provider selection. |
+| Flux download fails | Re-run `setup.bat`, check disk space and internet connection. |
+| Release runtime has `.part01` files | Recombine parts first, then extract the `.tar.gz`. |
+
 ## Security
 
-Do not commit API keys, local backend URLs, generated caches, model artifacts, `node_modules`, `dist`, or a full Python runtime. Store provider keys through the extension popup or environment variables such as `GOOGLE_API_KEY`, `OPENAI_API_KEY`, and `ANTHROPIC_API_KEY`.
+Never commit API keys, private backend URLs, generated caches, model artifacts, `node_modules`, `dist`, or a full Python runtime. Keep secrets in the extension popup or environment variables.
 
 ## License
 
