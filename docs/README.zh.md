@@ -52,7 +52,6 @@ MangaTranslator Extension 面向想要连续阅读漫画的用户，而不是把
 | 原始页面 | 翻译后页面 |
 | --- | --- |
 | <img src="assets/manga-before.png" alt="Original Japanese manga page" width="420"> | <img src="assets/manga-after.png" alt="Translated manga page rendered back into the image" width="420"> |
-| 处理前的日语对白。 | 清除气泡原文后，将英文译文重新渲染回漫画页面。 |
 
 - 使用你自己的 LLM：配置你信任的 provider、API key、model 和 endpoint。
 - 自动翻译更省时间：滚动阅读时自动翻译，并提前处理后面的页面。
