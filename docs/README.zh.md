@@ -123,9 +123,9 @@ git clone https://github.com/lehuyqq/Manga-Translator-Extension.git
 cd Manga-Translator-Extension
 ```
 
-1. 下载 release assets，并恢复 `backend/runtime/` 和 `backend/models/`。
+2. 下载 release assets，并恢复 `backend/runtime/` 和 `backend/models/`。
 
-1. 启动后端。
+3. 启动后端。
 
 ```powershell
 .\start-backend.bat
@@ -137,7 +137,7 @@ cd Manga-Translator-Extension
 http://localhost:7677
 ```
 
-1. 加载浏览器扩展。
+4. 加载浏览器扩展。
 
 ```powershell
 cd extension

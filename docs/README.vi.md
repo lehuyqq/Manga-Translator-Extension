@@ -123,9 +123,9 @@ git clone https://github.com/lehuyqq/Manga-Translator-Extension.git
 cd Manga-Translator-Extension
 ```
 
-1. Tải release assets và khôi phục `backend/runtime/` cùng `backend/models/`.
+2. Tải release assets và khôi phục `backend/runtime/` cùng `backend/models/`.
 
-1. Khởi động backend.
+3. Khởi động backend.
 
 ```powershell
 .\start-backend.bat
@@ -137,7 +137,7 @@ Backend sẽ lắng nghe tại:
 http://localhost:7677
 ```
 
-1. Load extension trình duyệt.
+4. Load extension trình duyệt.
 
 ```powershell
 cd extension

@@ -123,9 +123,9 @@ git clone https://github.com/lehuyqq/Manga-Translator-Extension.git
 cd Manga-Translator-Extension
 ```
 
-1. Download release assets and restore `backend/runtime/` and `backend/models/`.
+2. Download release assets and restore `backend/runtime/` and `backend/models/`.
 
-1. Start the backend.
+3. Start the backend.
 
 ```powershell
 .\start-backend.bat
@@ -137,7 +137,7 @@ The backend should listen on:
 http://localhost:7677
 ```
 
-1. Load the browser extension.
+4. Load the browser extension.
 
 ```powershell
 cd extension
