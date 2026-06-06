@@ -1,7 +1,7 @@
 <h1 align="center">MangaTranslator Extension</h1>
 
 <p align="center">
-  Translate manga pages directly in your browser with a local FastAPI backend, batch page scanner, auto-translate mode, multilingual UI, and optional Flux inpainting.
+  Translate manga pages directly in your browser with the LLM provider you configure, a local FastAPI backend, batch page scanner, auto-translate mode, multilingual UI, and optional Flux inpainting.
 </p>
 
 <p align="center">
@@ -19,6 +19,8 @@
 </p>
 
 <p align="center">
+  <a href="#showcase">Showcase</a>
+  ·
   <a href="#features">Features</a>
   ·
   <a href="#download">Download</a>
@@ -32,16 +34,38 @@
   <a href="#development">Development</a>
 </p>
 
+<p align="center">
+  <img src="docs/assets/mangatranslator-hero.png" alt="MangaTranslator Extension banner" width="100%">
+</p>
+
+<p align="center">
+  <img src="docs/assets/popup-preview.png" alt="MangaTranslator Extension popup" width="32%">
+  <img src="docs/assets/scanner-preview.png" alt="MangaTranslator Extension page scanner" width="64%">
+</p>
+
 ## Overview
 
 MangaTranslator Extension is a portable browser-extension stack for translating manga and comic pages. The browser extension scans images on the current page, sends them to a local backend, and replaces or previews the translated result. The backend runs locally, so the browser does not need to send manga images through a third-party extension server.
 
+The extension uses the LLM, API key, model, and Base URL that you provide. You can connect it to Google, OpenAI, Anthropic, OpenRouter, DeepSeek, xAI, Z.ai, Moonshot AI, or any OpenAI-compatible endpoint, then keep the translation workflow inside the browser.
+
 The default package is intentionally lighter: it includes the normal backend runtime and non-Flux models, while Flux Klein 4B is optional and can be installed later with `setup.bat`.
+
+## Showcase
+
+MangaTranslator Extension is built for people who want to keep reading, not copy text into separate tools. Open a chapter, scan the page, choose the images you want, and let your own LLM translate the dialogue back into the manga image.
+
+- Bring your own LLM: use the provider, API key, model, and endpoint you trust.
+- Read faster with auto-translate: pages are translated as you scroll, including lookahead pages.
+- Keep the manga feel: original text is cleaned and translated text is rendered back into the image.
+- Translate more than bubbles: SFX, narration, captions, and other outside-bubble text can be handled too.
+- Stay lightweight by default: Flux Klein 4B is optional, so normal users do not need to download a workstation-sized package.
 
 ## Features
 
 | Area | What it does |
 | --- | --- |
+| Bring-your-own LLM | Uses the LLM provider, API key, model, and Base URL configured by the user. |
 | Page scanner | Finds manga/comic images on the active page and lets you choose which pages to translate. |
 | Auto-translate | Watches the current reading page and translates images as you scroll. |
 | Bubble translation | Detects speech bubbles, removes original text, translates, and renders text back into the image. |

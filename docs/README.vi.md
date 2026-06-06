@@ -19,6 +19,8 @@
 </p>
 
 <p align="center">
+  <a href="#showcase">Showcase</a>
+  ·
   <a href="#tổng-quan">Tổng Quan</a>
   ·
   <a href="#tính-năng">Tính Năng</a>
@@ -32,9 +34,30 @@
   <a href="#flux-tùy-chọn">Flux Tùy Chọn</a>
 </p>
 
+<p align="center">
+  <img src="assets/mangatranslator-hero.png" alt="MangaTranslator Extension banner" width="100%">
+</p>
+
+<p align="center">
+  <img src="assets/popup-preview.png" alt="Popup MangaTranslator Extension" width="32%">
+  <img src="assets/scanner-preview.png" alt="Trinh quet trang MangaTranslator Extension" width="64%">
+</p>
+
+## Showcase
+
+MangaTranslator Extension được tạo cho người đọc muốn đọc truyện liền mạch, không phải copy từng câu sang công cụ khác. Mở một chapter, quét trang, chọn ảnh cần dịch, và để LLM của bạn dịch lời thoại rồi render lại vào ảnh manga.
+
+- Sử dụng LLM của bạn: cấu hình provider, API key, model và endpoint mà bạn tin dùng.
+- Đọc nhanh hơn với auto-translate: ảnh được dịch khi bạn cuộn trang, kèm dịch trước các trang sắp tới.
+- Giữ cảm giác manga: chữ gốc được xóa và chữ dịch được render lại vào ảnh.
+- Dịch cả ngoài bubble: hỗ trợ SFX, lời dẫn, caption và các đoạn chữ nằm ngoài bóng thoại.
+- Nhẹ hơn theo mặc định: Flux Klein 4B là tùy chọn, nên người dùng thông thường không phải tải một gói quá nặng.
+
 ## Tổng Quan
 
 MangaTranslator Extension là bộ extension + backend portable để dịch trang manga/comic. Extension trong trình duyệt quét ảnh trên tab hiện tại, gửi ảnh đến backend cục bộ, rồi thay hoặc hiển thị bản dịch đã render. Backend chạy trên máy của bạn, nên extension không cần gửi ảnh manga qua một máy chủ extension bên thứ ba.
+
+Extension sử dụng LLM, API key, model và Base URL do bạn cung cấp. Bạn có thể kết nối Google, OpenAI, Anthropic, OpenRouter, DeepSeek, xAI, Z.ai, Moonshot AI hoặc bất kỳ endpoint OpenAI-compatible nào, sau đó giữ toàn bộ workflow dịch ngay trong trình duyệt.
 
 Gói mặc định được giữ nhẹ hơn: bao gồm runtime backend và model không có Flux, còn Flux Klein 4B là tùy chọn và có thể cài sau bằng `setup.bat`.
 
@@ -42,6 +65,7 @@ Gói mặc định được giữ nhẹ hơn: bao gồm runtime backend và mode
 
 | Khu vực | Chức năng |
 | --- | --- |
+| LLM của bạn | Sử dụng provider, API key, model và Base URL do người dùng cấu hình. |
 | Trình quét trang | Tìm ảnh manga/comic trên trang hiện tại và cho phép chọn trang cần dịch. |
 | Tự động dịch | Theo dõi trang đọc hiện tại và dịch ảnh khi bạn cuộn. |
 | Dịch bubble | Nhận diện bubble thoại, xóa chữ gốc, dịch và render chữ lại vào ảnh. |
