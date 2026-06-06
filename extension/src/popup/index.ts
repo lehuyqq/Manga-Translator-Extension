@@ -459,19 +459,23 @@ async function checkHealth(backendUrl: string): Promise<void> {
 }
 
 async function ensureContentScript(tabId: number): Promise<boolean> {
-  try {
-    const ping = await chrome.tabs.sendMessage(tabId, { type: 'PING' });
-    if (ping?.ok) return true;
-  } catch {
-    /* inject below */
-  }
+  const pingContentScript = async (): Promise<boolean> => {
+    try {
+      const ping = await chrome.tabs.sendMessage(tabId, { type: 'PING' });
+      return Boolean(ping?.ok);
+    } catch {
+      return false;
+    }
+  };
+
+  if (await pingContentScript()) return true;
 
   try {
     await chrome.scripting.executeScript({
       target: { tabId },
       files: ['content-script/index.js'],
     });
-    return true;
+    return await pingContentScript();
   } catch {
     return false;
   }

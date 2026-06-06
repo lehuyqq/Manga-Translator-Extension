@@ -477,15 +477,24 @@ function normalizeSettings(raw?: Partial<AppSettings>): AppSettings {
 }
 
 async function ensureContentScript(tabId: number): Promise<void> {
-  try {
-    const response = await chrome.tabs.sendMessage(tabId, { type: 'PING' });
-    if (response?.ok) return;
-  } catch { /* inject below */ }
+  const pingContentScript = async (): Promise<boolean> => {
+    try {
+      const response = await chrome.tabs.sendMessage(tabId, { type: 'PING' });
+      return Boolean(response?.ok);
+    } catch {
+      return false;
+    }
+  };
+
+  if (await pingContentScript()) return;
 
   await chrome.scripting.executeScript({
     target: { tabId },
     files: ['content-script/index.js'],
   });
+  if (!(await pingContentScript())) {
+    throw new Error('Content script did not start on this page');
+  }
 }
 
 async function checkHealth(backendUrl: string): Promise<{ ok: boolean; error?: string }> {

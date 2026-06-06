@@ -1,12 +1,184 @@
-import { DEFAULT_BACKEND_URL } from '../shared/constants.js';
 import type { AppSettings, TranslateRequest } from '../shared/types.js';
-import { normalizeUiLanguage, t, type UiLanguage } from '../shared/i18n.js';
 
 const ROOT_ID  = 'mt-scanner-root';
 const STYLE_ID = 'mt-scanner-style';
 const STORAGE_KEY = 'manga_translator_settings';
 const TRANSLATED_CACHE_KEY = 'mt_translated_cache'; // rawUrl -> translated base64
 const TRANSLATED_CACHE_PREFIX = 'mt_translated_cache:';
+const DEFAULT_BACKEND_URL = 'http://localhost:7677';
+
+type UiLanguage = 'en' | 'vi' | 'zh' | 'ja' | 'ko';
+
+const EN_MESSAGES = {
+  autoMt: 'Auto MT',
+  autoMtDone: 'Auto MT Done',
+  stop: 'Stop',
+  translatedBadgeTitle: 'Translated by MangaTranslator',
+  noMangaImagesPage: 'No manga images found on this page.',
+  pageAlt: 'Page {page}',
+  pagesLabel: 'pages',
+  all: 'All',
+  none: 'None',
+  close: 'Close',
+  foundImagesOnPage: 'Found {count} images on this page',
+  autoCollect: 'Auto-collect',
+  cancel: 'Cancel',
+  translate: 'Translate',
+  starting: 'Starting...',
+  cancelledTranslated: 'Cancelled - {success}/{total} translated',
+  allImagesTranslated: 'All {count} images translated!',
+  partialTranslated: '{success}/{total} translated',
+  scanningPage: 'Scanning page...',
+  noImagesFoundOnPage: 'No images found on page',
+  foundImages: 'Found {count} images...',
+  foundMangaImages: 'Found {count} manga images',
+  cached: 'Cached',
+  loadError: 'Load error',
+  sending: 'Sending...',
+  translating: 'Translating...',
+  noResult: 'No result',
+  bubbles: '{count} bubbles - {time}s',
+  doneWithTime: 'Done - {time}s',
+  networkError: 'Network error',
+};
+
+type ContentMessageKey = keyof typeof EN_MESSAGES;
+
+const CONTENT_MESSAGES: Record<UiLanguage, Record<ContentMessageKey, string>> = {
+  en: EN_MESSAGES,
+  vi: {
+    autoMt: 'Auto MT',
+    autoMtDone: 'Auto MT xong',
+    stop: 'Dung',
+    translatedBadgeTitle: 'Da dich bang MangaTranslator',
+    noMangaImagesPage: 'Khong tim thay anh manga tren trang nay.',
+    pageAlt: 'Trang {page}',
+    pagesLabel: 'trang',
+    all: 'Tat ca',
+    none: 'Bo chon',
+    close: 'Dong',
+    foundImagesOnPage: 'Tim thay {count} anh tren trang nay',
+    autoCollect: 'Tu thu thap',
+    cancel: 'Huy',
+    translate: 'Dich',
+    starting: 'Dang bat dau...',
+    cancelledTranslated: 'Da huy - da dich {success}/{total}',
+    allImagesTranslated: 'Da dich toan bo {count} anh!',
+    partialTranslated: 'Da dich {success}/{total}',
+    scanningPage: 'Dang quet trang...',
+    noImagesFoundOnPage: 'Khong tim thay anh tren trang',
+    foundImages: 'Tim thay {count} anh...',
+    foundMangaImages: 'Tim thay {count} anh manga',
+    cached: 'Tu cache',
+    loadError: 'Loi tai anh',
+    sending: 'Dang gui...',
+    translating: 'Dang dich...',
+    noResult: 'Khong co ket qua',
+    bubbles: '{count} bubble - {time}s',
+    doneWithTime: 'Xong - {time}s',
+    networkError: 'Loi mang',
+  },
+  zh: {
+    autoMt: '自动 MT',
+    autoMtDone: '自动 MT 完成',
+    stop: '停止',
+    translatedBadgeTitle: '由 MangaTranslator 翻译',
+    noMangaImagesPage: '此页面没有找到漫画图片。',
+    pageAlt: '第 {page} 页',
+    pagesLabel: '页',
+    all: '全选',
+    none: '全不选',
+    close: '关闭',
+    foundImagesOnPage: '在此页面找到 {count} 张图片',
+    autoCollect: '自动收集',
+    cancel: '取消',
+    translate: '翻译',
+    starting: '正在开始...',
+    cancelledTranslated: '已取消 - 已翻译 {success}/{total}',
+    allImagesTranslated: '已翻译全部 {count} 张图片！',
+    partialTranslated: '已翻译 {success}/{total}',
+    scanningPage: '正在扫描页面...',
+    noImagesFoundOnPage: '页面上没有找到图片',
+    foundImages: '找到 {count} 张图片...',
+    foundMangaImages: '找到 {count} 张漫画图片',
+    cached: '缓存',
+    loadError: '加载错误',
+    sending: '正在发送...',
+    translating: '正在翻译...',
+    noResult: '无结果',
+    bubbles: '{count} 个气泡 - {time}s',
+    doneWithTime: '完成 - {time}s',
+    networkError: '网络错误',
+  },
+  ja: {
+    autoMt: 'Auto MT',
+    autoMtDone: 'Auto MT 完了',
+    stop: '停止',
+    translatedBadgeTitle: 'MangaTranslator で翻訳済み',
+    noMangaImagesPage: 'このページに漫画画像が見つかりません。',
+    pageAlt: 'ページ {page}',
+    pagesLabel: 'ページ',
+    all: 'すべて',
+    none: 'なし',
+    close: '閉じる',
+    foundImagesOnPage: 'このページで {count} 枚の画像を検出',
+    autoCollect: '自動収集',
+    cancel: 'キャンセル',
+    translate: '翻訳',
+    starting: '開始中...',
+    cancelledTranslated: 'キャンセル - {success}/{total} 翻訳済み',
+    allImagesTranslated: '{count} 枚すべて翻訳しました！',
+    partialTranslated: '{success}/{total} 翻訳済み',
+    scanningPage: 'ページをスキャン中...',
+    noImagesFoundOnPage: 'ページに画像が見つかりません',
+    foundImages: '{count} 枚の画像を検出...',
+    foundMangaImages: '{count} 枚の漫画画像を検出',
+    cached: 'キャッシュ',
+    loadError: '読み込みエラー',
+    sending: '送信中...',
+    translating: '翻訳中...',
+    noResult: '結果なし',
+    bubbles: '{count} 吹き出し - {time}s',
+    doneWithTime: '完了 - {time}s',
+    networkError: 'ネットワークエラー',
+  },
+  ko: {
+    autoMt: 'Auto MT',
+    autoMtDone: 'Auto MT 완료',
+    stop: '중지',
+    translatedBadgeTitle: 'MangaTranslator로 번역됨',
+    noMangaImagesPage: '이 페이지에서 만화 이미지를 찾지 못했습니다.',
+    pageAlt: '페이지 {page}',
+    pagesLabel: '페이지',
+    all: '전체',
+    none: '선택 해제',
+    close: '닫기',
+    foundImagesOnPage: '이 페이지에서 이미지 {count}개 발견',
+    autoCollect: '자동 수집',
+    cancel: '취소',
+    translate: '번역',
+    starting: '시작 중...',
+    cancelledTranslated: '취소됨 - {success}/{total} 번역됨',
+    allImagesTranslated: '이미지 {count}개 모두 번역됨!',
+    partialTranslated: '{success}/{total} 번역됨',
+    scanningPage: '페이지 스캔 중...',
+    noImagesFoundOnPage: '페이지에서 이미지를 찾지 못했습니다',
+    foundImages: '이미지 {count}개 발견...',
+    foundMangaImages: '만화 이미지 {count}개 발견',
+    cached: '캐시',
+    loadError: '로드 오류',
+    sending: '전송 중...',
+    translating: '번역 중...',
+    noResult: '결과 없음',
+    bubbles: '말풍선 {count}개 - {time}s',
+    doneWithTime: '완료 - {time}s',
+    networkError: '네트워크 오류',
+  },
+};
+
+function normalizeUiLanguage(language: unknown): UiLanguage {
+  return language === 'vi' || language === 'zh' || language === 'ja' || language === 'ko' ? language : 'en';
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Extension message listener
@@ -59,8 +231,9 @@ let seenUrls = new Set<string>();
 let imageCache = new Map<string, string>();
 let uiLanguage: UiLanguage = 'en';
 
-function tr(key: Parameters<typeof t>[1], vars: Record<string, string | number> = {}): string {
-  return t(uiLanguage, key, vars);
+function tr(key: ContentMessageKey, vars: Record<string, string | number> = {}): string {
+  const template = CONTENT_MESSAGES[uiLanguage]?.[key] ?? EN_MESSAGES[key] ?? key;
+  return Object.entries(vars).reduce((text, [name, value]) => text.replaceAll(`{${name}}`, String(value)), template);
 }
 
 async function refreshUiLanguage(): Promise<void> {
