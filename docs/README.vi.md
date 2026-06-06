@@ -38,14 +38,14 @@
   <img src="assets/mangatranslator-hero.png" alt="MangaTranslator Extension banner" width="100%">
 </p>
 
-<p align="center">
-  <img src="assets/popup-preview.png" alt="Popup MangaTranslator Extension" width="32%">
-  <img src="assets/scanner-preview.png" alt="Trinh quet trang MangaTranslator Extension" width="64%">
-</p>
-
 ## Showcase
 
 MangaTranslator Extension được tạo cho người đọc muốn đọc truyện liền mạch, không phải copy từng câu sang công cụ khác. Mở một chapter, quét trang, chọn ảnh cần dịch, và để LLM của bạn dịch lời thoại rồi render lại vào ảnh manga.
+
+| Popup điều khiển | Trình quét trang |
+| --- | --- |
+| <img src="assets/popup-preview.png" alt="Popup MangaTranslator Extension" width="390"> | <img src="assets/scanner-preview.png" alt="Trinh quet trang MangaTranslator Extension" width="720"> |
+| Cấu hình ngôn ngữ nguồn/đích, nhận diện chữ ngoài bubble, trạng thái backend và auto-translate một chạm. | Quét chapter, xem trước các trang đã phát hiện, chọn đúng ảnh cần dịch và dịch hàng loạt. |
 
 - Sử dụng LLM của bạn: cấu hình provider, API key, model và endpoint mà bạn tin dùng.
 - Đọc nhanh hơn với auto-translate: ảnh được dịch khi bạn cuộn trang, kèm dịch trước các trang sắp tới.

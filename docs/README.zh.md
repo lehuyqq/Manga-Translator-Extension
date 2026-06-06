@@ -38,14 +38,14 @@
   <img src="assets/mangatranslator-hero.png" alt="MangaTranslator Extension banner" width="100%">
 </p>
 
-<p align="center">
-  <img src="assets/popup-preview.png" alt="MangaTranslator Extension popup" width="32%">
-  <img src="assets/scanner-preview.png" alt="MangaTranslator Extension page scanner" width="64%">
-</p>
-
 ## Showcase
 
 MangaTranslator Extension 面向想要连续阅读漫画的用户，而不是把文字复制到另一个工具里。打开章节，扫描页面，选择要翻译的图片，然后让你自己的 LLM 翻译对白并把结果重新渲染回漫画图片。
+
+| Popup 控制面板 | 页面扫描器 |
+| --- | --- |
+| <img src="assets/popup-preview.png" alt="MangaTranslator Extension popup" width="390"> | <img src="assets/scanner-preview.png" alt="MangaTranslator Extension page scanner" width="720"> |
+| 配置源语言/目标语言、气泡外文字识别、后端状态，并一键启动自动翻译。 | 扫描章节、预览检测到的页面、只选择需要翻译的图片并批量翻译。 |
 
 - 使用你自己的 LLM：配置你信任的 provider、API key、model 和 endpoint。
 - 自动翻译更省时间：滚动阅读时自动翻译，并提前处理后面的页面。

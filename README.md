@@ -38,11 +38,6 @@
   <img src="docs/assets/mangatranslator-hero.png" alt="MangaTranslator Extension banner" width="100%">
 </p>
 
-<p align="center">
-  <img src="docs/assets/popup-preview.png" alt="MangaTranslator Extension popup" width="32%">
-  <img src="docs/assets/scanner-preview.png" alt="MangaTranslator Extension page scanner" width="64%">
-</p>
-
 ## Overview
 
 MangaTranslator Extension is a portable browser-extension stack for translating manga and comic pages. The browser extension scans images on the current page, sends them to a local backend, and replaces or previews the translated result. The backend runs locally, so the browser does not need to send manga images through a third-party extension server.
@@ -54,6 +49,11 @@ The default package is intentionally lighter: it includes the normal backend run
 ## Showcase
 
 MangaTranslator Extension is built for people who want to keep reading, not copy text into separate tools. Open a chapter, scan the page, choose the images you want, and let your own LLM translate the dialogue back into the manga image.
+
+| Popup controls | Page scanner |
+| --- | --- |
+| <img src="docs/assets/popup-preview.png" alt="MangaTranslator Extension popup" width="390"> | <img src="docs/assets/scanner-preview.png" alt="MangaTranslator Extension page scanner" width="720"> |
+| Configure source/target languages, outside-text detection, backend status, and one-click auto translation. | Scan a chapter, preview detected pages, select only what you need, and translate pages in batch. |
 
 - Bring your own LLM: use the provider, API key, model, and endpoint you trust.
 - Read faster with auto-translate: pages are translated as you scroll, including lookahead pages.
