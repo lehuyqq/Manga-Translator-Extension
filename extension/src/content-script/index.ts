@@ -257,6 +257,7 @@ let autoTranslateInFlightUrls = new Set<string>();
 let autoTranslateProcessing = false;
 let autoTranslateConcurrent = 0;
 let scannerPausedAutoTranslate = false;
+let translatedOverlayCounter = 0;
 const AUTO_MAX_CONCURRENT = 1;
 const AUTO_VIEWPORT_MARGIN_PX = 250;
 const AUTO_PREFETCH_PAGES = 3;
@@ -630,23 +631,117 @@ function applyTranslatedOverlay(img: HTMLImageElement, dataUrl: string): void {
     parent.style.position = 'relative';
   }
 
-  let overlay = parent.querySelector<HTMLImageElement>(':scope > .mt-page-overlay');
+  const overlayId = getTranslatedOverlayId(img);
+  let overlay = findTranslatedOverlay(parent, overlayId);
   if (!overlay) {
     overlay = document.createElement('img');
     overlay.className = 'mt-page-overlay';
     overlay.alt = '';
+    overlay.setAttribute('data-mt-for', overlayId);
     overlay.setAttribute('aria-hidden', 'true');
     parent.appendChild(overlay);
   }
 
   overlay.src = dataUrl;
   overlay.style.position = 'absolute';
-  overlay.style.inset = '0';
-  overlay.style.width = '100%';
-  overlay.style.height = '100%';
-  overlay.style.objectFit = window.getComputedStyle(img).objectFit || 'contain';
   overlay.style.zIndex = '9';
   overlay.style.pointerEvents = 'none';
+  overlay.style.display = 'block';
+  overlay.style.maxWidth = 'none';
+  overlay.style.opacity = '1';
+  syncTranslatedOverlayLayout(img, overlay);
+  scheduleTranslatedDecorationSync(img);
+}
+
+function getTranslatedOverlayId(img: HTMLImageElement): string {
+  const existing = img.getAttribute('data-mt-overlay-id');
+  if (existing) return existing;
+  translatedOverlayCounter++;
+  const id = `mt-page-${translatedOverlayCounter}`;
+  img.setAttribute('data-mt-overlay-id', id);
+  return id;
+}
+
+function findTranslatedOverlay(parent: HTMLElement, overlayId: string): HTMLImageElement | null {
+  for (const child of Array.from(parent.children)) {
+    if (
+      child instanceof HTMLImageElement
+      && child.classList.contains('mt-page-overlay')
+      && child.getAttribute('data-mt-for') === overlayId
+    ) {
+      return child;
+    }
+  }
+  return null;
+}
+
+function findTranslatedBadge(parent: HTMLElement, overlayId: string): HTMLElement | null {
+  for (const child of Array.from(parent.children)) {
+    if (
+      child instanceof HTMLElement
+      && child.classList.contains('mt-badge')
+      && child.getAttribute('data-mt-for') === overlayId
+    ) {
+      return child;
+    }
+  }
+  return null;
+}
+
+function getImagePositionWithinParent(img: HTMLImageElement, parent: HTMLElement): DOMRect {
+  const imgRect = img.getBoundingClientRect();
+  const parentRect = parent.getBoundingClientRect();
+  return new DOMRect(
+    imgRect.left - parentRect.left + parent.scrollLeft,
+    imgRect.top - parentRect.top + parent.scrollTop,
+    imgRect.width,
+    imgRect.height,
+  );
+}
+
+function syncTranslatedOverlayLayout(img: HTMLImageElement, overlay?: HTMLImageElement | null): void {
+  const parent = img.parentElement;
+  if (!parent) return;
+
+  const overlayId = getTranslatedOverlayId(img);
+  const targetOverlay = overlay ?? findTranslatedOverlay(parent, overlayId);
+  if (!targetOverlay) return;
+
+  const pos = getImagePositionWithinParent(img, parent);
+  const imgStyle = window.getComputedStyle(img);
+  targetOverlay.style.inset = 'auto';
+  targetOverlay.style.left = `${pos.x}px`;
+  targetOverlay.style.top = `${pos.y}px`;
+  targetOverlay.style.width = `${pos.width}px`;
+  targetOverlay.style.height = `${pos.height}px`;
+  targetOverlay.style.objectFit = imgStyle.objectFit || 'fill';
+  targetOverlay.style.objectPosition = imgStyle.objectPosition || '50% 50%';
+}
+
+function syncTranslatedBadgeLayout(img: HTMLImageElement, badge?: HTMLElement | null): void {
+  const parent = img.parentElement;
+  if (!parent) return;
+
+  const overlayId = getTranslatedOverlayId(img);
+  const targetBadge = badge ?? findTranslatedBadge(parent, overlayId);
+  if (!targetBadge) return;
+
+  const pos = getImagePositionWithinParent(img, parent);
+  targetBadge.style.left = `${pos.x + pos.width - 4}px`;
+  targetBadge.style.top = `${pos.y + 4}px`;
+  targetBadge.style.right = 'auto';
+  targetBadge.style.transform = 'translateX(-100%)';
+}
+
+function syncTranslatedDecorations(img: HTMLImageElement): void {
+  syncTranslatedOverlayLayout(img);
+  syncTranslatedBadgeLayout(img);
+}
+
+function scheduleTranslatedDecorationSync(img: HTMLImageElement): void {
+  window.requestAnimationFrame(() => syncTranslatedDecorations(img));
+  window.setTimeout(() => syncTranslatedDecorations(img), 250);
+  window.setTimeout(() => syncTranslatedDecorations(img), 1000);
 }
 
 function urlsMatch(a: string | null | undefined, b: string): boolean {
@@ -677,12 +772,7 @@ function applyTranslatedImageToPage(rawUrl: string, dataUrl: string): boolean {
 
     if (!candidates.some((candidate) => urlsMatch(candidate, rawUrl))) continue;
 
-    img.setAttribute('data-mt-raw', rawUrl);
-    img.setAttribute('data-mt-translated', 'true');
-    img.removeAttribute('srcset');
-    img.removeAttribute('data-srcset');
-    img.src = dataUrl;
-    addTranslatedBadge(img);
+    applyTranslatedImage(img, dataUrl, rawUrl);
     applied = true;
   }
 
@@ -700,17 +790,35 @@ function applyTranslatedImageToPage(rawUrl: string, dataUrl: string): boolean {
 }
 
 function addTranslatedBadge(img: HTMLImageElement): void {
-  if (img.parentElement?.querySelector('.mt-badge')) return;
-  const badge = document.createElement('div');
-  badge.className = 'mt-badge';
-  badge.textContent = 'MT';
-  badge.title = tr('translatedBadgeTitle');
   const parent = img.parentElement;
-  if (parent) {
-    const parentStyle = window.getComputedStyle(parent);
-    if (parentStyle.position === 'static') parent.style.position = 'relative';
+  if (!parent) return;
+
+  const parentStyle = window.getComputedStyle(parent);
+  if (parentStyle.position === 'static') parent.style.position = 'relative';
+
+  const overlayId = getTranslatedOverlayId(img);
+  let badge = findTranslatedBadge(parent, overlayId);
+  if (!badge) {
+    badge = document.createElement('div');
+    badge.className = 'mt-badge';
+    badge.setAttribute('data-mt-for', overlayId);
     parent.appendChild(badge);
   }
+
+  badge.textContent = 'MT';
+  badge.title = tr('translatedBadgeTitle');
+  badge.style.position = 'absolute';
+  badge.style.background = 'rgba(34,197,94,0.85)';
+  badge.style.color = 'white';
+  badge.style.fontSize = '9px';
+  badge.style.fontWeight = '900';
+  badge.style.padding = '1px 5px';
+  badge.style.borderRadius = '4px';
+  badge.style.pointerEvents = 'none';
+  badge.style.zIndex = '10';
+  badge.style.fontFamily = 'Inter, system-ui, sans-serif';
+  syncTranslatedBadgeLayout(img, badge);
+  scheduleTranslatedDecorationSync(img);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
