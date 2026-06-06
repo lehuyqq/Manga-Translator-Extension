@@ -60,7 +60,6 @@ MangaTranslator Extension is built for people who want to keep reading, not copy
 | Original page | Translated page |
 | --- | --- |
 | <img src="docs/assets/manga-before.png" alt="Original Japanese manga page" width="420"> | <img src="docs/assets/manga-after.png" alt="Translated manga page rendered back into the image" width="420"> |
-| Japanese dialogue before processing. | Cleaned bubbles with translated English text rendered back into the manga page. |
 
 - Bring your own LLM: use the provider, API key, model, and endpoint you trust.
 - Read faster with auto-translate: pages are translated as you scroll, including lookahead pages.
