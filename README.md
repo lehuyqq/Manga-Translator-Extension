@@ -55,6 +55,13 @@ MangaTranslator Extension is built for people who want to keep reading, not copy
 | <img src="docs/assets/popup-preview.png" alt="MangaTranslator Extension popup" width="390"> | <img src="docs/assets/scanner-preview.png" alt="MangaTranslator Extension page scanner" width="720"> |
 | Configure source/target languages, outside-text detection, backend status, and one-click auto translation. | Scan a chapter, preview detected pages, select only what you need, and translate pages in batch. |
 
+### Translation Result
+
+| Original page | Translated page |
+| --- | --- |
+| <img src="docs/assets/manga-before.png" alt="Original Japanese manga page" width="420"> | <img src="docs/assets/manga-after.png" alt="Translated manga page rendered back into the image" width="420"> |
+| Japanese dialogue before processing. | Cleaned bubbles with translated English text rendered back into the manga page. |
+
 - Bring your own LLM: use the provider, API key, model, and endpoint you trust.
 - Read faster with auto-translate: pages are translated as you scroll, including lookahead pages.
 - Keep the manga feel: original text is cleaned and translated text is rendered back into the image.

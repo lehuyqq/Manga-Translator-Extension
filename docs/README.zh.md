@@ -47,6 +47,13 @@ MangaTranslator Extension 面向想要连续阅读漫画的用户，而不是把
 | <img src="assets/popup-preview.png" alt="MangaTranslator Extension popup" width="390"> | <img src="assets/scanner-preview.png" alt="MangaTranslator Extension page scanner" width="720"> |
 | 配置源语言/目标语言、气泡外文字识别、后端状态，并一键启动自动翻译。 | 扫描章节、预览检测到的页面、只选择需要翻译的图片并批量翻译。 |
 
+### 翻译效果
+
+| 原始页面 | 翻译后页面 |
+| --- | --- |
+| <img src="assets/manga-before.png" alt="Original Japanese manga page" width="420"> | <img src="assets/manga-after.png" alt="Translated manga page rendered back into the image" width="420"> |
+| 处理前的日语对白。 | 清除气泡原文后，将英文译文重新渲染回漫画页面。 |
+
 - 使用你自己的 LLM：配置你信任的 provider、API key、model 和 endpoint。
 - 自动翻译更省时间：滚动阅读时自动翻译，并提前处理后面的页面。
 - 保留漫画观感：清除原文后把译文重新排版进图片。
