@@ -266,6 +266,24 @@ release-assets/
 
 Use GitHub Releases for runtime/model archives. GitHub blocks files over 100 MB in normal Git history, and large runtime archives should be split so each release asset stays below GitHub's release asset limit.
 
+## FAQ
+
+**Q: How good is the translation quality?**
+
+A: Translation quality depends on the LLM model you use. Stronger models usually produce more natural wording, better context handling, and fewer mistranslations.
+
+**Q: Some pages have text outside speech bubbles and the result shows white/black boxes. What should I do?**
+
+A: Use the optional Flux Klein 4B model to improve inpainting quality for text outside bubbles, SFX, narration, and messy backgrounds.
+
+**Q: Why does the popup show Backend Offline?**
+
+A: Start `.\start-backend.bat`, wait until the backend is ready, then confirm that `http://localhost:7677/health` opens successfully. Also check that the Backend URL in the `Config` tab matches your local server.
+
+**Q: Why are some manga images not detected?**
+
+A: Wait for the reader page to finish lazy-loading, then run Scan & Translate Page again. If the site loads pages only while scrolling, scroll through the chapter once or use Auto-collect in the scanner.
+
 ## Troubleshooting
 
 | Problem | Fix |

@@ -266,6 +266,24 @@ release-assets/
 
 请使用 GitHub Releases 分发 runtime/model archives。GitHub 会阻止普通 Git 历史中的 100 MB 以上文件，大型 runtime archive 也应该拆分，确保每个 release asset 低于 GitHub 的 release asset 限制。
 
+## FAQ
+
+**Q: 翻译质量怎么样？**
+
+A: 翻译质量取决于你使用的 LLM model。更强的模型通常会有更自然的表达、更好的上下文理解和更少的误译。
+
+**Q: 有些没有气泡的页面翻译后出现白色/黑色背景框，怎么办？**
+
+A: 请使用可选的 Flux Klein 4B model，以改善气泡外文字、SFX、旁白和复杂背景的 inpainting 效果。
+
+**Q: 为什么 popup 显示 Backend Offline？**
+
+A: 运行 `.\start-backend.bat`，等待后端启动完成，然后检查 `http://localhost:7677/health`。同时确认 `Config` 标签页中的 Backend URL 指向你的本地服务器。
+
+**Q: 为什么有些漫画图片没有被检测到？**
+
+A: 等 reader 页面完全加载后，再运行 Scan & Translate Page。如果网站只在滚动时 lazy-load 图片，请先滚动浏览章节，或在 scanner 中使用 Auto-collect。
+
 ## 故障排查
 
 | 问题 | 解决方法 |

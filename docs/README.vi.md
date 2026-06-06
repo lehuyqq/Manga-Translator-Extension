@@ -266,6 +266,24 @@ release-assets/
 
 Hãy dùng GitHub Releases cho runtime/model archives. GitHub chặn file trên 100 MB trong Git history thường, và archive runtime lớn nên được chia nhỏ để mỗi release asset nằm dưới giới hạn của GitHub.
 
+## FAQ
+
+**Q: Chất lượng dịch thuật thì sao?**
+
+A: Chất lượng dịch dựa trên model LLM mà bạn sử dụng. Model càng tốt thì câu dịch thường tự nhiên hơn, hiểu ngữ cảnh tốt hơn và ít dịch sai hơn.
+
+**Q: Một số trang dịch không có bubble thì bị hiện khung nền trắng/đen, phải làm sao?**
+
+A: Hãy sử dụng model Flux Klein 4B tùy chọn để cải thiện chất lượng inpainting cho chữ ngoài bubble, SFX, lời dẫn và nền ảnh phức tạp.
+
+**Q: Vì sao popup báo Backend Offline?**
+
+A: Chạy `.\start-backend.bat`, chờ backend khởi động xong, rồi kiểm tra `http://localhost:7677/health`. Đồng thời kiểm tra Backend URL trong tab `Config` có đúng server local của bạn không.
+
+**Q: Vì sao một số ảnh manga không được tìm thấy?**
+
+A: Hãy chờ trang reader load xong rồi chạy Scan & Translate Page lại. Nếu website chỉ lazy-load ảnh khi cuộn, hãy cuộn qua chapter một lần hoặc dùng Auto-collect trong scanner.
+
 ## Khắc Phục Sự Cố
 
 | Lỗi | Cách xử lý |
