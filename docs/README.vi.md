@@ -204,11 +204,13 @@ Chỉ dùng Flux khi bạn cấu hình outside-text inpainting sang một mode F
 ## Quy Trình Sử Dụng
 
 1. Chạy backend bằng `start-backend.bat`.
-1. Mở chapter manga/comic trong Chrome hoặc Edge.
-1. Bấm biểu tượng MangaTranslator.
-1. Chọn ngôn ngữ nguồn và đích.
-1. Bấm Scan & Translate Page để chọn ảnh thủ công, hoặc Auto-translate để dịch khi cuộn.
-1. Kiểm tra ảnh đã dịch trên trang.
+2. Mở chapter manga/comic trong Chrome hoặc Edge.
+3. Bấm biểu tượng MangaTranslator.
+4. Chọn ngôn ngữ nguồn và đích.
+5. Bấm Scan & Translate Page để chọn ảnh thủ công, hoặc Auto-translate để dịch khi cuộn.
+6. Kiểm tra ảnh đã dịch trên trang.
+
+Lời khuyên: Khi gặp các web có lazy-load khiến extension không quét được toàn bộ trang truyện cùng lúc, hãy scan và dịch trước 4-5 trang truyện, sau đó bật Auto-MT để có trải nghiệm đọc mượt mà nhất.
 
 ## Cấu Trúc Dự Án
 

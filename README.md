@@ -204,11 +204,13 @@ Use Flux only when you explicitly configure outside-text inpainting to a Flux mo
 ## Usage Workflow
 
 1. Start the backend with `start-backend.bat`.
-1. Open a manga/comic chapter in Chrome or Edge.
-1. Click the MangaTranslator extension icon.
-1. Choose source and target language.
-1. Click Scan & Translate Page to choose images manually, or Auto-translate to translate as you scroll.
-1. Review translated images on the page.
+2. Open a manga/comic chapter in Chrome or Edge.
+3. Click the MangaTranslator extension icon.
+4. Choose source and target language.
+5. Click Scan & Translate Page to choose images manually, or Auto-translate to translate as you scroll.
+6. Review translated images on the page.
+
+Tip: On manga sites that use lazy-load and prevent the extension from scanning the whole chapter at once, scan and translate the next 4-5 pages first, then turn on Auto-MT for the smoothest reading experience.
 
 ## Project Layout
 

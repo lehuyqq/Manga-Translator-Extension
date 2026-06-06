@@ -204,11 +204,13 @@ backend/models/flux/
 ## 使用流程
 
 1. 使用 `start-backend.bat` 启动后端。
-1. 在 Chrome 或 Edge 中打开 manga/comic chapter。
-1. 点击 MangaTranslator 扩展图标。
-1. 选择源语言和目标语言。
-1. 点击 Scan & Translate Page 手动选择图片，或点击 Auto-translate 在滚动时自动翻译。
-1. 在页面上查看已翻译图片。
+2. 在 Chrome 或 Edge 中打开 manga/comic chapter。
+3. 点击 MangaTranslator 扩展图标。
+4. 选择源语言和目标语言。
+5. 点击 Scan & Translate Page 手动选择图片，或点击 Auto-translate 在滚动时自动翻译。
+6. 在页面上查看已翻译图片。
+
+建议：遇到使用 lazy-load、导致扩展无法一次扫描完整章节的网站时，先扫描并翻译接下来的 4-5 页，然后开启 Auto-MT，以获得最流畅的阅读体验。
 
 ## 项目结构
 
